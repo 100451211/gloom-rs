@@ -72,11 +72,19 @@ unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>) -> u32 {
     gl::BindBuffer(gl::ARRAY_BUFFER , vbo);
 
     // * Fill it with data
-    gl::BufferData(gl::ARRAY_BUFFER, byte_size_of_array(&vertices), pointer_to_array(vertices), gl::STATIC_DRAW);
+    gl::BufferData(gl::ARRAY_BUFFER, 
+        byte_size_of_array(vertices), 
+        pointer_to_array(vertices), 
+        gl::STATIC_DRAW);
     
     // * Configure a VAP for the data and enable it
     let index:u32 = 0;
-    gl::VertexAttribPointer(index, 3,gl::FLOAT,gl::FALSE,0,ptr::null());
+    gl::VertexAttribPointer(index, 
+        3,
+        gl::FLOAT,
+        gl::FALSE,
+        0,
+        ptr::null());
     gl::EnableVertexAttribArray(index);
 
     // * Generate a IBO and bind it
@@ -85,7 +93,10 @@ unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>) -> u32 {
     gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, ibo);
 
     // * Fill it with data
-    gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, byte_size_of_array(indices),pointer_to_array(indices), gl::STATIC_DRAW);
+    gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, 
+        byte_size_of_array(indices),
+        pointer_to_array(indices), 
+        gl::STATIC_DRAW);
 
     // * Return the ID of the VAO
     return vao;
@@ -156,6 +167,27 @@ fn main() {
 
         //let my_vao = unsafe { 1337 };
         let vertices: Vec<f32> = vec![
+            // VIEWING WINDOW
+            // 1.0, -1.0, 0.0,  // 0
+            // 0.0, 1.0, 0.0,  // 1
+            // -1.0, -1.0, 0.0, // 2
+
+            // Triangle 1
+            0.25, -0.25, 0.0,  // 0
+            0.0, 0.25, 0.0,  // 1
+            -0.25, -0.25, 0.0, // 2
+
+            // Triangle 2
+            1.0, 0.8,-0.8, // 3
+            0.0, 1.0, 0.0, // 4
+            0.8, 0.5, 0.6, // 5
+
+            // Triangle 3
+            -0.6, -0.8,-0.8, // 6
+            0.0,-0.4,0.0, // 7
+            -0.8,-0.2,-0.6 // 8
+
+            /*TASK 1
             // Triangle 1
             -0.2, -0.2, 0.0,
             0.2, -0.2, 0.0,
@@ -179,16 +211,27 @@ fn main() {
             // Triangle 5
             0.35, 0.0, 0.0,
             0.1, -0.5, 0.0,
-            0.6, -0.5, 0.0,
+            0.6, -0.5, 0.0,*/
         ];
 
         let indices: Vec<u32> = vec![
+            // InitialOrder
+            // 2,0,1,
+            // 5,3,4,
+            // 8,6,7
+
+            // Order1
+            0,2,1,
+            5,3,4,
+            8,6,7
+
+            /*TASK 1
             // Indices for drawing the triangles
             0, 1, 2,    // Triangle 1
             3, 4, 5,    // Triangle 2
             7, 8, 6,    // Triangle 3
             10, 9, 11,  // Triangle 4
-            13, 14, 12, // Triangle 5
+            13, 14, 12, // Triangle 5*/
         ];
 
         // Draw the triangles
