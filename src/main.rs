@@ -1,12 +1,12 @@
 // Uncomment these following global attributes to silence most warnings of "low" interest:
-/*
+
 #![allow(dead_code)]
 #![allow(non_snake_case)]
 #![allow(unreachable_code)]
 #![allow(unused_mut)]
 #![allow(unused_unsafe)]
 #![allow(unused_variables)]
-*/
+
 extern crate nalgebra_glm as glm;
 use std::{ mem, ptr, os::raw::c_void };
 use std::thread;
@@ -168,70 +168,92 @@ fn main() {
         //let my_vao = unsafe { 1337 };
         let vertices: Vec<f32> = vec![
             // VIEWING WINDOW
-            // 1.0, -1.0, 0.0,  // 0
-            // 0.0, 1.0, 0.0,  // 1
-            // -1.0, -1.0, 0.0, // 2
+                // 1.0, -1.0, 0.0,  // 0
+                // 0.0, 1.0, 0.0,  // 1
+                // -1.0, -1.0, 0.0, // 2
 
+            // TASK 3
+            /*TASK 2.d
             // Triangle 1
-            0.25, -0.25, 0.0,  // 0
-            0.0, 0.25, 0.0,  // 1
-            -0.25, -0.25, 0.0, // 2
+            -0.6, -0.8,-0.8, // 0
+            0.0,-0.4,0.0, // 1
+            -0.8,-0.2,-0.6, // 2
 
             // Triangle 2
             1.0, 0.8,-0.8, // 3
             0.0, 1.0, 0.0, // 4
             0.8, 0.5, 0.6, // 5
+            */
 
-            // Triangle 3
-            -0.6, -0.8,-0.8, // 6
-            0.0,-0.4,0.0, // 7
-            -0.8,-0.2,-0.6 // 8
-
+            /*TASK 2.c
+                // -- Triangle 1
+                0.25, -0.25, 0.0,  // 0
+                0.0, 0.25, 0.0,  // 1
+                -0.25, -0.25, 0.0, // 2
+                // -- Triangle 2
+                1.0, 0.8,-0.8, // 3
+                0.0, 1.0, 0.0, // 4
+                0.8, 0.5, 0.6, // 5
+                // -- Triangle 3
+                -0.6, -0.8,-0.8, // 6
+                0.0,-0.4,0.0, // 7
+                -0.8,-0.2,-0.6 // 8
+            */
+            
             /*TASK 1
-            // Triangle 1
-            -0.2, -0.2, 0.0,
-            0.2, -0.2, 0.0,
-            0.0,  0.2, 0.0,
+                // Triangle 1
+                -0.2, -0.2, 0.0,
+                0.2, -0.2, 0.0,
+                0.0,  0.2, 0.0,
 
-            // Triangle 2
-            0.2, 0.1, 0.0,
-            0.5, 0.1, 0.0,
-            0.3, 0.6, 0.0,
+                // Triangle 2
+                0.2, 0.1, 0.0,
+                0.5, 0.1, 0.0,
+                0.3, 0.6, 0.0,
 
-            // Triangle 3
-            -0.25, 0.6, 0.0,
-            -0.75, 0.1, 0.0,
-            -0.15, 0.1, 0.0,
-            
-            // Triangle 4
-            -0.1, -0.5, 0.0,
-            -0.6, -0.5, 0.0,
-            -0.3, 0.0, 0.0,
-            
-            // Triangle 5
-            0.35, 0.0, 0.0,
-            0.1, -0.5, 0.0,
-            0.6, -0.5, 0.0,*/
+                // Triangle 3
+                -0.25, 0.6, 0.0,
+                -0.75, 0.1, 0.0,
+                -0.15, 0.1, 0.0,
+                
+                // Triangle 4
+                -0.1, -0.5, 0.0,
+                -0.6, -0.5, 0.0,
+                -0.3, 0.0, 0.0,
+                
+                // Triangle 5
+                0.35, 0.0, 0.0,
+                0.1, -0.5, 0.0,
+                0.6, -0.5, 0.0,
+            */
         ];
+        
 
         let indices: Vec<u32> = vec![
-            // InitialOrder
-            // 2,0,1,
-            // 5,3,4,
-            // 8,6,7
+            /*InitialOrder
+                2,0,1,
+                5,3,4,
+                8,6,7*/
 
-            // Order1
-            0,2,1,
-            5,3,4,
-            8,6,7
+            /*Task2.d
+                // Triangle 1
+                2,0,1,
+                // Triangle 2
+                5,3,4*/
+
+            /*Task2.c
+                //Order1
+                2,0,1,
+                5,3,4,
+                8,6,7*/
 
             /*TASK 1
-            // Indices for drawing the triangles
-            0, 1, 2,    // Triangle 1
-            3, 4, 5,    // Triangle 2
-            7, 8, 6,    // Triangle 3
-            10, 9, 11,  // Triangle 4
-            13, 14, 12, // Triangle 5*/
+                0, 1, 2,    // Triangle 1
+                3, 4, 5,    // Triangle 2
+                7, 8, 6,    // Triangle 3
+                10, 9, 11,  // Triangle 4
+                13, 14, 12, // Triangle 5 
+            */
         ];
 
         // Draw the triangles
