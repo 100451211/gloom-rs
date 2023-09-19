@@ -53,7 +53,7 @@ fn offset<T>(n: u32) -> *const c_void {
 
 // == // Generate your VAO here
 // Message for git commit
-unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>) -> u32 {
+unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>, colors: &Vec<f32>) -> u32 {
     // Implement me!
 
     // Also, feel free to delete comments :)
@@ -77,7 +77,7 @@ unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>) -> u32 {
         pointer_to_array(vertices), 
         gl::STATIC_DRAW);
     
-    // * Configure a VAP for the data and enable it
+    // * Configure a VAO for the data and enable it
     let index:u32 = 0;
     gl::VertexAttribPointer(index, 
         3,
@@ -96,7 +96,59 @@ unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>) -> u32 {
     gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, 
         byte_size_of_array(indices),
         pointer_to_array(indices), 
-        gl::STATIC_DRAW);
+        gl::STATIC_DRAW
+    );
+
+
+    // ** LAB 2 -  1a **
+
+    let mut cbo_id: u32 = 0;
+    gl::GenBuffers(1, &mut cbo_id);
+    gl::BindBuffer(gl::ARRAY_BUFFER, cbo_id);
+    gl::BufferData(
+        gl::ARRAY_BUFFER,
+        (colors.len() * std::mem::size_of::<f32>()) as isize,
+        colors.as_ptr() as *const std::ffi::c_void,
+        gl::STATIC_DRAW,
+    );
+
+    let color_attrbute_index: u32 = 1;
+    let nr_of_color_values = 4;
+    gl::VertexAttribPointer(
+        color_attrbute_index,                        // Index
+        nr_of_color_values,                      // Size
+        gl::FLOAT,                              // Type
+        gl::FALSE,                         // Normalized
+        size_of::<f32>() * nr_of_color_values, // Stride
+        offset::<c_void>(0),                  // Offset
+    );
+    gl::EnableVertexAttribArray(color_attrbute_index);
+
+    // * Create color vector with 1 value per vertex and bind it
+    // let mut colors = vec![1.0; vertices.len()];
+    // let mut c_buf = 0;
+    // gl::GenBuffers(1, &mut c_buf);
+    // gl::BindBuffer(gl::ARRAY_BUFFER, c_buf);
+
+
+    // // * Fill it with data
+    // gl::BufferData(gl::ARRAY_BUFFER, 
+    //     byte_size_of_array(&colors),
+    //     pointer_to_array(&colors), 
+    //     gl::STATIC_DRAW
+    // );
+
+    // // * put into a Vertex Buffer Object, and attached to the VAO
+    // gl::VertexAttribPointer(
+    //     1, 
+    //     4,
+    //     gl::FLOAT,
+    //     gl::FALSE,
+    //     byte_size_of_array(&colors),
+    //     ptr::null()
+    // );
+    // gl::EnableVertexAttribArray(1);
+
 
     // * Return the ID of the VAO
     return vao;
@@ -254,8 +306,17 @@ fn main() {
             */
         ];
 
+        let colors: Vec<f32> =vec![
+            1.0, 0.0, 0.0, 0.9,
+            0.0, 1.0, 0.0, 0.7,
+            0.0, 0.0, 1.0, 0.5,
+            1.0, 1.0, 0.0, 0.3,
+            0.0, 1.0, 1.0, 0.1,
+            1.0, 0.0, 1.0, 0.6,
+        ];
+
         // Draw the triangles
-        let vao = unsafe {create_vao(&vertices, &indices)};
+        let vao = unsafe {create_vao(&vertices, &indices, &colors)};
 
         // == // Set up your shaders here
 
