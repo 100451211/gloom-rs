@@ -1,5 +1,7 @@
 // Uncomment these following global attributes to silence most warnings of "low" interest:
 
+// Uncomment these following global attributes to silence most warnings of "low" interest:
+
 #![allow(dead_code)]
 #![allow(non_snake_case)]
 #![allow(unreachable_code)]
@@ -22,10 +24,10 @@ use glutin::event_loop::ControlFlow;
 const INITIAL_SCREEN_W: u32 = 800;
 const INITIAL_SCREEN_H: u32 = 600;
 
-// == // Helper functions to make interacting with OpenGL a little bit prettier. You *WILL* need these! // == //
+// == // Helper functions to make interacting with OpenGL a little bit prettier. You WILL need these! // == //
 
 // Get the size of an arbitrary array of numbers measured in bytes
-// Example usage:  pointer_to_array(my_array)
+// Example usage:  byte_size_of_array(my_array)
 fn byte_size_of_array<T>(val: &[T]) -> isize {
     std::mem::size_of_val(&val[..]) as isize
 }
@@ -51,108 +53,78 @@ fn offset<T>(n: u32) -> *const c_void {
 // Get a null pointer (equivalent to an offset of 0)
 // ptr::null()
 
+
 // == // Generate your VAO here
-// Message for git commit
 unsafe fn create_vao(vertices: &Vec<f32>, indices: &Vec<u32>, colors: &Vec<f32>) -> u32 {
     // Implement me!
 
     // Also, feel free to delete comments :)
 
-    // Create VAO 
-    let mut vao = 0;
-
+    // This should:
     // * Generate a VAO and bind it
-    gl::GenVertexArrays(5, &mut vao);
-    assert!(vao != 0);
-    gl::BindVertexArray(vao);
-    
     // * Generate a VBO and bind it
-    let mut vbo = 0;
-    gl::GenBuffers(1,&mut vbo );
-    gl::BindBuffer(gl::ARRAY_BUFFER , vbo);
-
     // * Fill it with data
-    gl::BufferData(gl::ARRAY_BUFFER, 
-        byte_size_of_array(vertices), 
-        pointer_to_array(vertices), 
+    // * Configure a VAP for the data and enable it
+    // * Generate a IBO and bind it
+    // * Fill it with data
+    // * Return the ID of the VAO
+    let mut vao_id: u32 = 0;
+    gl::GenVertexArrays(1,&mut vao_id);
+    gl::BindVertexArray(vao_id);
+
+    //info en Opengl pdf pg 12 size: bloq.1, data: bloq.6
+    let mut vbo_id: u32 = 0;
+    gl::GenBuffers(1,&mut vbo_id);
+    gl::BindBuffer(gl::ARRAY_BUFFER, vbo_id);
+    gl::BufferData(
+        gl::ARRAY_BUFFER,
+        byte_size_of_array(vertices),
+        pointer_to_array(vertices),
         gl::STATIC_DRAW);
-    
-    // * Configure a VAO for the data and enable it
-    let index:u32 = 0;
-    gl::VertexAttribPointer(index, 
+
+    let vertex_attribute_index: u32 = 0;
+    gl::VertexAttribPointer(
+        vertex_attribute_index,
         3,
         gl::FLOAT,
         gl::FALSE,
-        0,
-        ptr::null());
-    gl::EnableVertexAttribArray(index);
-
-    // * Generate a IBO and bind it
-    let mut ibo = 0;
-    gl::GenBuffers(1, &mut ibo);
-    gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, ibo);
-
-    // * Fill it with data
-    gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, 
-        byte_size_of_array(indices),
-        pointer_to_array(indices), 
-        gl::STATIC_DRAW
-    );
-
-
-    // ** LAB 2 -  1a **
+        size_of::<f32>() * 3,
+        offset::<c_void>(0));
+    gl::EnableVertexAttribArray(vertex_attribute_index);
 
     let mut cbo_id: u32 = 0;
     gl::GenBuffers(1, &mut cbo_id);
     gl::BindBuffer(gl::ARRAY_BUFFER, cbo_id);
     gl::BufferData(
-        gl::ARRAY_BUFFER,
-        (colors.len() * std::mem::size_of::<f32>()) as isize,
-        colors.as_ptr() as *const std::ffi::c_void,
-        gl::STATIC_DRAW,
+    gl::ARRAY_BUFFER,                 // Target
+    byte_size_of_array(colors), // Size
+    pointer_to_array(colors),   // Data
+    gl::STATIC_DRAW,                  // Usage
     );
 
-    let color_attrbute_index: u32 = 1;
-    let nr_of_color_values = 4;
+    let color_attrbute_index: u32 = 2;
     gl::VertexAttribPointer(
-        color_attrbute_index,                        // Index
-        nr_of_color_values,                      // Size
-        gl::FLOAT,                              // Type
-        gl::FALSE,                         // Normalized
-        size_of::<f32>() * nr_of_color_values, // Stride
-        offset::<c_void>(0),                  // Offset
-    );
+    color_attrbute_index,                        // Index
+    4,                          // Size
+    gl::FLOAT,                                   // Type
+    gl::FALSE,                                   // Normalized
+    size_of::<f32>() * 4, // Stride
+    offset::<c_void>(0));                   // Offset
     gl::EnableVertexAttribArray(color_attrbute_index);
 
-    // * Create color vector with 1 value per vertex and bind it
-    // let mut colors = vec![1.0; vertices.len()];
-    // let mut c_buf = 0;
-    // gl::GenBuffers(1, &mut c_buf);
-    // gl::BindBuffer(gl::ARRAY_BUFFER, c_buf);
+//util::size_of::<f32>() * 3,
+//util::offset::<c_void>(0))
+    
+    let mut ibo_id: u32 = 0;
+    gl::GenBuffers(1,&mut ibo_id);
+    gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, ibo_id);
+    gl::BufferData(
+        gl::ELEMENT_ARRAY_BUFFER,
+        byte_size_of_array(indices),
+        pointer_to_array(indices),
+        gl::STATIC_DRAW);
 
-
-    // // * Fill it with data
-    // gl::BufferData(gl::ARRAY_BUFFER, 
-    //     byte_size_of_array(&colors),
-    //     pointer_to_array(&colors), 
-    //     gl::STATIC_DRAW
-    // );
-
-    // // * put into a Vertex Buffer Object, and attached to the VAO
-    // gl::VertexAttribPointer(
-    //     1, 
-    //     4,
-    //     gl::FLOAT,
-    //     gl::FALSE,
-    //     byte_size_of_array(&colors),
-    //     ptr::null()
-    // );
-    // gl::EnableVertexAttribArray(1);
-
-
-    // * Return the ID of the VAO
-    return vao;
-
+    return vao_id;
 }
 
 
@@ -166,6 +138,7 @@ fn main() {
     let cb = glutin::ContextBuilder::new()
         .with_vsync(true);
     let windowed_context = cb.build_windowed(wb, &el).unwrap();
+
     // Uncomment these if you want to use the mouse for controls, but want it to be confined to the screen and/or invisible.
     // windowed_context.window().set_cursor_grab(true).expect("failed to grab cursor");
     // windowed_context.window().set_cursor_visible(false);
@@ -215,108 +188,56 @@ fn main() {
             println!("GLSL\t: {}", util::get_gl_string(gl::SHADING_LANGUAGE_VERSION));
         }
 
+
+        //anadido por mi PATATA
+        let vertices: Vec<f32> = vec![
+        -0.25, 0.56, 0.0, // Point 0
+        0.25, 0.56, 0.0, // Point 1
+        0.0,  0.83, 0.0, // Point 2
+        -0.15, 0.54, 0.0,
+        0.0, 0.36, 0.0,
+        0.15, 0.54, 0.0,
+        -0.35, -0.24, 0.0,
+        0.35, -0.24, 0.0,
+        0.0, 0.34, 0.0,
+        -0.17, -0.66, 0.0,
+        -0.07, -0.46, 0.0,
+        -0.17, -0.26, 0.0,
+        0.17, -0.66, 0.0,
+        0.17, -0.26, 0.0,
+        0.07, -0.46, 0.0
+        ];
+        let indices: Vec<u32> = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+        let blend= 0.8;
+        let colors: Vec<f32> = vec![
+            0.0, 0.0, 1.0, 0.4, //
+            0.0, 0.8, 1.0, 0.4, //
+            0.8, 0.0, 1.0, 0.4, //
+
+            1.0, 1.0, 0.0, 0.4, //
+            1.0, 0.0, 0.0, 0.4, //
+            1.0, 1.0, 1.0, 0.4, //
+
+            0.0, 1.0, 1.0, 0.4, //
+            1.0, 1.0, 0.0, 0.4, //
+            0.0, 1.0, 1.0, 0.4, //
+
+            1.0, 1.0, 1.0, 0.4, //
+            1.0, 0.0, 0.0, 0.4, //
+            1.0, 0.0, 1.0, 0.4, //
+
+            0.0, 0.0, 1.0, 0.4, //
+            0.0, 0.8, 1.0, 0.4, //
+            0.8, 0.0, 1.0, 0.4, //
+        ];
+        //let indices: Vec<u32> = vec![0, 1, 2];
+
+    //Hasta aqui lo mio PATATA
+
         // == // Set up your VAO around here
 
-        //let my_vao = unsafe { 1337 };
-        let vertices: Vec<f32> = vec![
-            // VIEWING WINDOW
-                // 1.0, -1.0, 0.0,  // 0
-                // 0.0, 1.0, 0.0,  // 1
-                // -1.0, -1.0, 0.0, // 2
-            
-            /*TASK 3.a */
-            // coordinates to draw a circle
+        let my_vao = unsafe { create_vao(&vertices, &indices, &colors) };
 
-            /*TASK 2.d*/
-            // Triangle 1
-            -0.6, -0.8,-0.8, // 0
-            0.0,-0.4,0.0, // 1
-            -0.8,-0.2,-0.6, // 2
-
-            // Triangle 2
-            1.0, 0.8,-0.8, // 3
-            0.0, 1.0, 0.0, // 4
-            0.8, 0.5, 0.6, // 5
-            
-
-            /*TASK 2.c
-                // -- Triangle 1
-                0.25, -0.25, 0.0,  // 0
-                0.0, 0.25, 0.0,  // 1
-                -0.25, -0.25, 0.0, // 2
-                // -- Triangle 2
-                1.0, 0.8,-0.8, // 3
-                0.0, 1.0, 0.0, // 4
-                0.8, 0.5, 0.6, // 5
-                // -- Triangle 3
-                -0.6, -0.8,-0.8, // 6
-                0.0,-0.4,0.0, // 7
-                -0.8,-0.2,-0.6 // 8
-            */
-            
-            /*TASK 1
-                // Triangle 1
-                -0.25, 0.56, 0.0, // 0 
-                0.25, 0.56, 0.0, // 1
-                0.0,  0.83, 0.0, // 2
-                // Triangle 2
-                -0.15, 0.54, 0.0,  // 3
-                0.0, 0.36, 0.0, // 4
-                0.15, 0.54, 0.0, // 5
-                // Triangle 3
-                -0.35, -0.24, 0.0, // 6
-                0.35, -0.24, 0.0, // 7
-                0.0, 0.34, 0.0, // 8
-                // Triangle 4
-                -0.17, -0.66, 0.0, // 9
-                -0.07, -0.46, 0.0, // 10
-                -0.17, -0.26, 0.0, // 11
-                // Triangle 5
-                0.17, -0.66, 0.0, // 12
-                0.17, -0.26, 0.0, // 13
-                0.07, -0.46, 0.0, // 14
-            */
-        ];
-        
-
-        let indices: Vec<u32> = vec![
-            /*InitialOrder
-                2,0,1,
-                5,3,4,
-                8,6,7*/
-                
-            /*Task2.d*/
-                // Triangle 1
-                2,0,1,
-                // Triangle 2
-                5,3,4
-
-            /*Task2.c
-                //Order1
-                2,0,1,
-                5,3,4,
-                8,6,7*/
-
-            /*TASK 1
-            0, 1, 2, 
-            3, 4, 5, 
-            6, 7, 8, 
-            9, 10, 11, 
-            12, 13, 14   
-            */
-        ];
-
-        let colors: Vec<f32> =vec![
-            1.0, 0.0, 0.0, 0.9,
-            0.0, 1.0, 0.0, 0.7,
-            0.0, 0.0, 1.0, 0.5,
-            1.0, 1.0, 0.0, 0.3,
-            0.0, 1.0, 1.0, 0.1,
-            1.0, 0.0, 1.0, 0.6,
-        ];
-
-        // Draw the triangles
-        let vao = unsafe {create_vao(&vertices, &indices, &colors)};
 
         // == // Set up your shaders here
 
@@ -327,15 +248,24 @@ fn main() {
         // This snippet is not enough to do the exercise, and will need to be modified (outside
         // of just using the correct path), but it only needs to be called once
 
-        
+        /*
+        let simple_shader = unsafe {
+            shader::ShaderBuilder::new()
+                .attach_file("./path/to/simple/shader.file")
+                .link()
+        };
+        */
+
+        //Desde esta linea (incluida), quitar si necesario. PATATA
         let simple_shader = unsafe {
             shader::ShaderBuilder::new()
                 .attach_file("./shaders/simple.vert")
                 .attach_file("./shaders/simple.frag")
-                .link()
-                .activate()
-        };     
+                .link() //sin ; PATATA
+                .activate();
+        };
 
+        //Hasra esta linea (incluida), quitar si necesario. PATATA
 
         // Used to demonstrate keyboard handling for exercise 2.
         let mut _arbitrary_number = 0.0; // feel free to remove
@@ -402,6 +332,7 @@ fn main() {
 
                 // == // Issue the necessary gl:: commands to draw your scene here
                 gl::DrawElements(gl::TRIANGLES, 15,gl::UNSIGNED_INT,ptr::null());
+
 
 
             }
