@@ -304,7 +304,9 @@ fn main() {
                 .link()
         };
         */
+        
 
+        
         //Desde esta linea (incluida), quitar si necesario. PATATA
         let simple_shader = unsafe {
             shader::ShaderBuilder::new()
@@ -313,8 +315,6 @@ fn main() {
                 .link() //sin ; PATATA
                 .activate();
         };
-
-        //Hasra esta linea (incluida), quitar si necesario. PATATA
 
         // Used to demonstrate keyboard handling for exercise 2.
         let mut _arbitrary_number = 0.0; // feel free to remove
@@ -373,14 +373,32 @@ fn main() {
             // PATATA
             let composite_matrix: glm::Mat4 = glm::identity();
 
+            let affine_transformation_matrix: glm::Mat4 = glm::identity();
+
+        unsafe {
+            gl::UniformMatrix4fv(
+                simple_shader.get_uniform_location("affine_transformation_matrix"),
+                1,
+                0,
+                affine_transformation_matrix.as_ptr(),
+            );
+        }
+
+            //patata23:53
+            /*let matrix_location = unsafe {
+                gl::GetUniformLocation(simple_shader.program_id, CString::new("transformationMatrix").unwrap().as_ptr())
+            };
+
             unsafe {
+                gl::UseProgram(simple_shader.program_id);
                 gl::UniformMatrix4fv(
-                    gl::GetUniformLocation(composite_matrix, "composite_matrix"),
-                    1,
-                    0,
-                    composite_matrix.as_ptr(),
-                );
-            }
+                    matrix_location,  
+                    1, 
+                    gl::FALSE, 
+                    composite_matrix.as_ptr());
+                gl::UseProgram(0); // Unbind the shader program
+            };
+            */ 
 
             unsafe {
                 // Clear the color and depth buffers
