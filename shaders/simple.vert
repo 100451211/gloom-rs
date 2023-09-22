@@ -7,11 +7,10 @@ layout(location=0) in vec3 position;
 layout(location=2) in vec4 in_color;
 out vec4 frag_color;
 
-uniform mat4x4 composite_matrix;
+uniform (location=3) mat4x4 composite_matrix;
 
 void main()
 {
-
     /*mat4x4 identity_matrix = {
         { 1, 0, 0, 0 },
         { 0, 1, 0, 0 },

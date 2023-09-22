@@ -10,6 +10,7 @@
 #![allow(unused_variables)]
 
 extern crate nalgebra_glm as glm;
+use std::ffi::CString;
 use std::{ mem, ptr, os::raw::c_void };
 use std::thread;
 use std::sync::{Mutex, Arc, RwLock};
@@ -369,8 +370,16 @@ fn main() {
                 *delta = (0.0, 0.0); // reset when done
             }
 
-            // == // Please compute camera transforms here (exercise 2 & 3)
+            let composite_matrix: glm::Mat4 = glm::identity();
 
+            unsafe {
+                gl::UniformMatrix4fv(
+                    gl::GetUniformLocation(composite_matrix, "composite_matrix"),
+                    1,
+                    0,
+                    composite_matrix.as_ptr(),
+                );
+            }
 
             unsafe {
                 // Clear the color and depth buffers
@@ -380,8 +389,6 @@ fn main() {
 
                 // == // Issue the necessary gl:: commands to draw your scene here
                 gl::DrawElements(gl::TRIANGLES, 15,gl::UNSIGNED_INT,ptr::null());
-
-
 
             }
 
