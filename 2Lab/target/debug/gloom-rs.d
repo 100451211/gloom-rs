@@ -1,0 +1,1 @@
+/home/mariatc/gloom-rs-1/2Lab/target/debug/gloom-rs: /home/mariatc/gloom-rs-1/2Lab/src/camera.rs /home/mariatc/gloom-rs-1/2Lab/src/main.rs /home/mariatc/gloom-rs-1/2Lab/src/shader.rs /home/mariatc/gloom-rs-1/2Lab/src/util.rs

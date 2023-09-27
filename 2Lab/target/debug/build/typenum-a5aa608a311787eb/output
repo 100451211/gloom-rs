@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/mariatc/gloom-rs-1/target/debug/build/typenum-a5aa608a311787eb/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/mariatc/gloom-rs-1/target/debug/build/typenum-a5aa608a311787eb/out/op.rs
